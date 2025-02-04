@@ -51,11 +51,6 @@ void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
 
     printf("Warm up kernel finished!\n");
 
-    cudaEvent_t start, end;
-    cudaEventCreate(&start);
-    cudaEventCreate(&end);
-
-    cudaEventRecord(start);
 
     switch (kernel)
     {
@@ -74,7 +69,7 @@ void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
         break;
 
     case 2:
-        printf("Use coalecse memory access kernel.\n");
+        printf("Use coalesce memory access kernel.\n");
         
         block = dim3(WARP_SIZE * WARP_SIZE);
         grid = dim3(N / WARP_SIZE, N / WARP_SIZE);
@@ -128,16 +123,6 @@ void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
         printf("Invalid kernel!\n");
         break;
     }
-
-    
-
-    cudaEventRecord(end);
-    cudaEventSynchronize(end);
-
-    float eplasedTime;
-    cudaEventElapsedTime(&eplasedTime, start, end);
-
-    printf("kernel takes %.2f milliseconds.\n", eplasedTime);
 
 }
 

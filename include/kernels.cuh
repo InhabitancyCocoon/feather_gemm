@@ -2,7 +2,7 @@
 
 #include "kernels/00_cublas.cuh"
 #include "kernels/01_naive.cuh"
-#include "kernels/02_coalecse_memory.cuh"
+#include "kernels/02_coalesce_memory.cuh"
 #include "kernels/03_tiled.cuh"
 #include "kernels/04_4x_coarsen_tiled.cuh"
 #include "kernels/05_8x_compute.cuh"
