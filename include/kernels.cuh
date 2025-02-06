@@ -9,3 +9,4 @@
 #include "kernels/06_more_compute.cuh"
 #include "kernels/07_vectorize.h"
 #include "kernels/08_warp_tile.cuh"
+#include "kernels/09_double_buffering.cuh"

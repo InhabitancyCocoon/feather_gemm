@@ -119,6 +119,15 @@ void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
         warp_tile<128, 8><<<grid,block>>>(A, B, C, N, alpha, beta);
         break;
 
+
+    case 9:
+        printf("Double buffering.\n");
+        block = dim3(16 * 16);
+        grid = dim3(N / 128, N / 128);
+        double_buffering<128, 8><<<grid,block>>>(A, B, C, N, alpha, beta);
+        break;
+    
+
     default:
         printf("Invalid kernel!\n");
         break;
@@ -161,6 +170,10 @@ void simple_device_query() {
             iProp.sharedMemPerMultiprocessor / 1024.0);
     printf("Total number of registers available per block: %d\n",
             iProp.regsPerBlock);
+
+    printf("Maximum number of registers per thread can use: %d\n",
+            255);
+
     printf("Totoal number of registers available per SM: %d\n",
             iProp.regsPerMultiprocessor);
     printf("Warp size:                                     %d\n",
