@@ -25,8 +25,8 @@ file(GLOB KERNEL_SOURCES "${CMAKE_SOURCE_DIR}/src/kernels/*.cu")
 
 # generate executable
 
-add_executable(dummy_kernel dummy_kernel.cu)
-target_link_libraries(dummy_kernel ${CUDA_LIBRARIES})
+add_executable(dummy_kernel dummy_kernel.cu src/run_utils.cu ${KERNEL_SOURCES})
+target_link_libraries(dummy_kernel ${CUDA_LIBRARIES} cublas)
 
 
 add_executable(cublas_sgemm cublas_sgemm.cu src/run_utils.cu ${KERNEL_SOURCES})

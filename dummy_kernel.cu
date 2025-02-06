@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <run_utils.cuh>
 
 __global__ void times_2(int *data, const int N) {
     unsigned int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -7,6 +8,10 @@ __global__ void times_2(int *data, const int N) {
 
 
 int main(int argc, char* argv[]) {
+
+    simple_device_query();
+
+
     const int N = 1 << 8;
     dim3 grid(4);
     dim3 block(N / 4);
