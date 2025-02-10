@@ -1,0 +1,1 @@
+watch -n 0.1 nvidia-smi --query-gpu=power.draw,clocks.sm,clocks.mem,clocks_throttle_reasons.active --format=csv
