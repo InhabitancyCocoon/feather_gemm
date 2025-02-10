@@ -11,7 +11,7 @@ consume gpu resources.
 
 ```
 setlocal
-set OUTPUT_DIR=docs\profile_result\RTX4060
+set OUTPUT_DIR=docs\profile_result\RTX4060\ChangeSize\4096
 set EXECUTABLE_DIR=build\Release
 
 ncu --set full -o "%OUTPUT_DIR%\00_cublas"              "%EXECUTABLE_DIR%\main.exe" 0
