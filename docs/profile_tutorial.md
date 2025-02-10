@@ -27,3 +27,5 @@ ncu --set full -o "%OUTPUT_DIR%\09_double_buffering"           "%EXECUTABLE_DIR%
 
 endlocal
 ```
+
+### my personal profile result is quite strange...
