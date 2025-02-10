@@ -1,5 +1,8 @@
 #include "run_utils.cuh"
-
+#include <cuda_runtime.h>
+#include <stdio.h>
+#include <fstream>
+#include <iomanip>
 
 void random_initialize(float *data, const int N) {
     for (int i = 0; i < N; i++) {
@@ -39,8 +42,23 @@ __global__ void warm_up_kernel(float* C, const int N) {
 }
 
 
+void flush_l2_cache() {
+    int dev_id{};
+    int m_l2_size{};
+    void* buffer;
+    CUDA_CHECK(cudaGetDevice(&dev_id));
+    CUDA_CHECK(cudaDeviceGetAttribute(&m_l2_size, cudaDevAttrL2CacheSize, dev_id));
+    if (m_l2_size > 0) {
+        CUDA_CHECK(cudaMalloc(&buffer, static_cast<std::size_t>(m_l2_size)));
+        int* m_l2_buffer = reinterpret_cast<int*>(buffer);
+        CUDA_CHECK(cudaMemsetAsync(m_l2_buffer, 0, static_cast<std::size_t>(m_l2_size)));
+        CUDA_CHECK(cudaFree(m_l2_buffer));
+    }
+}
+
+
 void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
-                const float alpha, const float beta) {
+                const float alpha, const float beta, bool ncuAllowed) {
     constexpr unsigned int WARP_SIZE = 32;
     dim3 grid;
     dim3 block;
@@ -50,6 +68,16 @@ void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
     cudaDeviceSynchronize();
 
     printf("Warm up kernel finished!\n");
+
+    cudaEvent_t start, end;
+    cudaEventCreate(&start);
+    cudaEventCreate(&end);
+
+    cudaEventRecord(start);
+
+    if (!ncuAllowed) {
+        flush_l2_cache();
+    }
 
 
     switch (kernel)
@@ -131,6 +159,29 @@ void run_kernel(float* A, float* B, float* C, const int N, const int kernel,
     default:
         printf("Invalid kernel!\n");
         break;
+    }
+
+    cudaEventRecord(end);
+
+    cudaEventSynchronize(end);
+
+    float elapsedTime;
+
+    cudaEventElapsedTime(&elapsedTime, start, end);
+
+
+    char logFilePath[100];
+    sprintf(logFilePath, "./docs/profile_result/A100-PCIE-40GB/MNK=2048/kernel_%d.txt", kernel);
+
+    if (!ncuAllowed) {
+        printf("This kernel takes %.2f milliseconds\n", elapsedTime);
+        std::ofstream logFile(logFilePath, std::ios::app);
+        logFile << "Kernel execution time: " 
+                << std::fixed << std::setprecision(3)
+                << elapsedTime 
+                << " ms" 
+                << std::endl;
+        logFile.close();
     }
 
 }

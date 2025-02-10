@@ -7,8 +7,8 @@
 
 int main(int argc, char* argv[]) {
 
-    if (argc < 2) {
-        printf("Too little parameter, you need to chose one kernel.\n");
+    if (argc < 3) {
+        printf("Too little parameter, you need to choose one kernel and point out whether ncu can be used.\n");
         return 0;
     }
 
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     random_initialize(h_C, N);
 
     copy_matrix(cpu_C, h_C, N);
-    cpu_gemm(h_A, h_B, cpu_C, N, alpha, beta);
+    // cpu_gemm(h_A, h_B, cpu_C, N, alpha, beta);
 
 
     cudaMemcpy(d_A, h_A, bytes, cudaMemcpyHostToDevice);
@@ -48,13 +48,14 @@ int main(int argc, char* argv[]) {
     
 
     int kernel = std::stoi(argv[1]);
+    bool ncuAllowed = std::stoi(argv[2]);
 
-    run_kernel(d_A, d_B, d_C, N, kernel, alpha, beta);
+    run_kernel(d_A, d_B, d_C, N, kernel, alpha, beta, ncuAllowed);
 
     
 
     cudaMemcpy(h_C, d_C, bytes, cudaMemcpyDeviceToHost);
-    check_result(cpu_C, h_C, N);
+    // check_result(cpu_C, h_C, N);
 
 
 

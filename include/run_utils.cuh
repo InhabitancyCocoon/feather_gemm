@@ -22,12 +22,14 @@ void random_initialize(float *data, const int N);
 
 void check_result(const float* data_1, const float* data_2, const int N);
 
-void run_kernel(float* A, float* B, float* C, const int N, const int kernel, const float alpha, const float beta);
+void run_kernel(float* A, float* B, float* C, const int N, const int kernel, const float alpha, const float beta, bool ncuDisabled);
 
 void cpu_gemm(const float* A, const float* B, float* C, const int N, const float alpha, const float beta);
 
 void simple_device_query();
 
 void copy_matrix(float* dst, const float* src, const int N);
+
+void flush_l2_cache();
 
 __global__ void warm_up_kernel(float* C, const int N);
