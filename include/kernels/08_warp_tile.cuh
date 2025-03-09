@@ -152,3 +152,69 @@ __global__ void warp_tile(float *A, float *B, float *C, const int N,
     }
 
 }
+
+
+/*
+    test another way of tiling warps.
+    C_TILE is still 128 x 128.
+    Blocksize 256, 8 warps
+    Each warp compute 32 x 64 elem.
+    Each warp compute 32 x 32 x 2 elem.
+    Each thread compute 32 x 1 x 2 elem.
+
+*/
+
+
+// template<unsigned int TILE_ROW, unsigned int TILE_COL>
+// __global__ void warp_tile(float *A, float *B, float *C, const int N,
+//                           const float alpha, const float beta) {
+//     int m = N / TILE_COL;
+//     int bx = blockIdx.y, by = blockIdx.x;
+
+//     A += bx * N * TILE_ROW;
+//     B += by * TILE_ROW;
+
+//     C += bx * N * TILE_ROW + by * TILE_ROW;
+
+//     int warpIdx = threadIdx.x / 32;
+//     int laneIdx = threadIdx.x % 32;
+
+//     int A_shared_idx = warpIdx / 2;
+//     int B_shared_idx = warpIdx % 2;
+
+//     __shared__ float A_TILE[TILE_ROW][TILE_COL];
+//     __shared__ float B_TILE[TILE_COL][TILE_ROW];
+//     float results[2][32]{};
+
+//     #pragma unroll
+//     for (int i = 0; i < m; ++i) {
+//         for (int j = 0; j < 4; ++j) {
+//             A_TILE[warpIdx * 16 + j * 4 + laneIdx / 8][laneIdx % 8] = A[(laneIdx / 8 + warpIdx * 16 + j * 4) * N + laneIdx % 8];
+//             B_TILE[warpIdx][laneIdx + j * 32] = B[warpIdx * N + laneIdx + j * 32];
+//         }
+
+//         __syncthreads();
+
+//         A += 8;
+//         B += 8 * N;
+
+//         #pragma unroll
+//         for (int t = 0; t < 2; ++t) {
+//             for (int p = 0; p < 32; ++p) {
+//                 for (int q = 0; q < 8; ++q) {
+//                     results[t][p] += A_TILE[A_shared_idx * 32 + p][q] * B_TILE[q][B_shared_idx * 64 + laneIdx + t * 32];
+//                 }
+//             }
+//         }
+//     }
+
+//     #pragma unroll
+//     for (int t = 0; t < 2; ++t) {
+//         for (int p = 0; p < 32; ++p) {
+//             C[(A_shared_idx * 32 + p) * N + t * 32 + laneIdx + B_shared_idx * 64] = C[(A_shared_idx * 32 + p) * N + t * 32 + laneIdx + B_shared_idx * 64] * beta 
+//                                                                                     + alpha * results[t][p];
+//         }
+//     }
+
+
+// }                    

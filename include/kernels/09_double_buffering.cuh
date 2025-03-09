@@ -48,9 +48,29 @@
 
     The smem is sufficient but I am worried about register spilling since each thread can use at most 255 registers.
 
-
-
     This is the last try and the last trick, I hope it works.
+
+
+    Pseudo code looks like this:
+
+    __shared__ float A_TILE[2][size];
+    __shared__ float B_TILE[2][size];
+
+    load_from_global(A_TILE[0]);
+    load_from_global(B_TILE[0]);
+
+    int prefetch_idx = 1, compute_idx = 0;
+
+
+    for (int step = 0; step < K / TILE_K - 1; ++step) {
+        load_from_global(A_TILE[prefetch_idx]);
+        load_from_global(B_TILE[prefethc_idx]);
+        compute_tile_matmul(A_TILE[compute_idx], B_TILE[compute_idx]);
+        prefetch_idx = 1 - prefetch_idx;
+        compute_idx = 1 - compute_idx;
+    }
+
+    compute_tile_matmul(A_TILE[compute_idx], B_TILE[compute_idx]);
 */
 
 //Fixme: this kernel now is right, but the performance is bad.
