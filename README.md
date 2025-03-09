@@ -4,6 +4,10 @@
 
 ## Introduction
 
+This is a work log and self-study journey on how to optimize single precision general matrix multiplication on RTX4060 GPU.
+I explained some basic cuda concepts and profiler tricks during kernel optimization.
+Currently I am not very satisfied with the results, although I did put a lot of effort.
+
 ## Build
 
 ```
