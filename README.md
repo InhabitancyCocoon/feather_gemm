@@ -32,6 +32,7 @@ cmake --build . --config Release
 > [triton document](https://triton-lang.org/main/index.html)
 >
 > [efficient gemm](https://github.com/NVIDIA/cutlass/blob/main/media/docs/efficient_gemm.md)
+>
 > [gpu mode](https://www.youtube.com/@GPUMODE)
 
 ## TODO
