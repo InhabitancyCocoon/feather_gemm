@@ -42,7 +42,7 @@ cmake --build . --config Release
 
 - warp level matmul, tensor core
 
-- Hopper features: TMA, Asynchrony
+- Hopper features: TMA, Asynchrony, check [Hopper](https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/) for details.
 
 
 ## TIPS 
