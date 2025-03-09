@@ -7,8 +7,6 @@ find_package(CUDA REQUIRED)
 # ensure cuda is available
 include(CheckLanguage)
 check_language(CUDA)
-set(CMAKE_CXX_STANDARD 17)
-set(CUDA_COMPUTE_CAPABILITY 89)
 
 # This option demonstrates resource usage.
 # add_compile_options("--ptxas-options=-v")
