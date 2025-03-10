@@ -8,6 +8,8 @@ This is a work log and self-study journey on how to optimize single precision ge
 I explained some basic cuda concepts and profiler tricks during kernel optimization.
 Currently I am not very satisfied with the results, although I did put a lot of effort.
 
+![roofline_model](/docs/profile_result/RTX4060/MNK=2048/roofline_model.png)
+
 ## Build
 
 ```
